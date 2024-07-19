@@ -1,21 +1,27 @@
-package com.example.myapplication
+package com.example.myapplication.Adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.R
 
 class RvAdapter(private val items: List<Item>) : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
 
-    data class Item(val imageResId: Int, val text: String, val buttonText: String)
+    data class Item(val imageResId: Int, val text: String)
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imageView: ImageView = view.findViewById(R.id.imageViewItem)
-        val textView: TextView = view.findViewById(R.id.textViewItem)
-        val button: Button = view.findViewById(R.id.buttonItem)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val imageView: ImageView = itemView.findViewById(R.id.imageViewRight)
+        private val textView1: TextView = itemView.findViewById(R.id.textView1)
+        private val textView2: TextView = itemView.findViewById(R.id.textView2)
+
+        fun bind(item: Item) {
+            imageView.setImageResource(item.imageResId)
+            textView1.text = item.text
+            textView2.text = "File ${item.text}" // Thay đổi mô tả tùy theo item nếu cần
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,9 +32,7 @@ class RvAdapter(private val items: List<Item>) : RecyclerView.Adapter<RvAdapter.
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
-        holder.imageView.setImageResource(item.imageResId)
-        holder.textView.text = item.text
-        holder.button.text = item.buttonText
+        holder.bind(item)
     }
 
     override fun getItemCount(): Int {

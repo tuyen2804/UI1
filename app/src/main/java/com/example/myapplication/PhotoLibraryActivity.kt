@@ -1,41 +1,32 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import androidx.viewpager2.widget.ViewPager2
 
 class PhotoLibraryActivity : AppCompatActivity() {
-
-    private lateinit var buttonSelect: Button
-    private lateinit var textViewSelectedCount: TextView
-    private lateinit var textViewLibraryTitle: TextView
-    private lateinit var buttonAll: Button
-    private lateinit var buttonBrowser: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_photo_library)
 
-        buttonSelect = findViewById(R.id.buttonSelect)
-        textViewSelectedCount = findViewById(R.id.textViewSelectedCount)
-        textViewLibraryTitle = findViewById(R.id.textViewLibraryTitle)
-        buttonAll = findViewById(R.id.buttonAll)
-        buttonBrowser = findViewById(R.id.buttonBrowser)
+        val viewPager = findViewById<ViewPager2>(R.id.viewPager)
+        val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+        val txtViewType =findViewById<TextView>(R.id.txtViewType)
 
+        val adapter = ViewLibraryAdapter(supportFragmentManager, lifecycle)
+        viewPager.adapter = adapter
 
-        buttonAll.setOnClickListener {
-            textViewLibraryTitle.text = "Library > All"
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, AllFragment())
-                .commit()
-        }
-
-        buttonBrowser.setOnClickListener {
-            textViewLibraryTitle.text = "Library > Browser"
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, BrowserFragment())
-                .commit()
-        }
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            when (position) {
+                0 -> {tab.text = "All"
+                }
+                1 -> {tab.text = "Browser"
+                }
+            }
+        }.attach()
     }
 }
