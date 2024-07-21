@@ -6,22 +6,17 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.myapplication.DataItem.ItemImage
 import com.example.myapplication.R
 
 class ImageAdapter(
-    private val items: List<Item>
+    private val items: List<ItemImage>
 ) : RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
-    data class Item(val imageResId: Int, val text: String)
-
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageViewItem: ImageView = itemView.findViewById(R.id.imageViewItem)
-        val textViewItem: TextView = itemView.findViewById(R.id.textViewItem)
-
-        fun bind(item: Item) {
-            imageViewItem.setImageResource(item.imageResId)
-            textViewItem.text = item.text
-        }
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val imageView: ImageView = view.findViewById(R.id.imageViewItem)
+        val txtNameAlbum: TextView = view.findViewById(R.id.txtNameImage)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,8 +26,14 @@ class ImageAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
+        val item = items[position]
+        Glide.with(holder.imageView.context)
+            .load(item.imagePath)
+            .into(holder.imageView)
+        holder.txtNameAlbum.text = item.imageSize
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int {
+        return items.size
+    }
 }

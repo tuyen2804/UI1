@@ -1,6 +1,9 @@
 package com.example.myapplication
 
+import android.app.Activity
+import android.database.Cursor
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.Adapter.ImageAdapter
+import com.example.myapplication.DataItem.ItemImage
 
 class ImageFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ImageAdapter
+    private lateinit var albumName: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,24 +31,42 @@ class ImageFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.recyclerView)
 
-        // Sample data
-        val items = listOf(
-            ImageAdapter.Item(R.drawable.a1, "Item 1"),
-            ImageAdapter.Item(R.drawable.a1, "Item 2"),
-            ImageAdapter.Item(R.drawable.a1, "Item 3"),
-            ImageAdapter.Item(R.drawable.a1, "Item 4"),
-            ImageAdapter.Item(R.drawable.a1, "Item 5"),
-            ImageAdapter.Item(R.drawable.a1, "Item 6"),
-            ImageAdapter.Item(R.drawable.a1, "Item 7"),
-            ImageAdapter.Item(R.drawable.a1, "Item 8"),
-            ImageAdapter.Item(R.drawable.a1, "Item 9")
-        )
+        // Nhận tên album từ arguments
+        albumName = arguments?.getString("albumName") ?: ""
 
-        // Initialize the adapter with items
+        // Lấy hình ảnh từ album và cập nhật RecyclerView
+        val items = getImagesFromAlbum(requireActivity(), albumName)
         adapter = ImageAdapter(items)
-
-        // Set up GridLayoutManager with 3 columns
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         recyclerView.adapter = adapter
     }
+
+    private fun getImagesFromAlbum(activity: Activity, albumName: String): List<ItemImage> {
+        val cursor: Cursor?
+        val listOfImages = mutableListOf<ItemImage>()
+        val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+
+        val projection = arrayOf(
+            MediaStore.MediaColumns.DATA
+        )
+
+        cursor = activity.contentResolver.query(
+            uri, projection, "${MediaStore.Images.Media.BUCKET_DISPLAY_NAME} = ?",
+            arrayOf(albumName), null
+        )
+
+        val columnIndexData = cursor!!.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA)
+
+        while (cursor.moveToNext()) {
+            val absolutePathOfImage = cursor.getString(columnIndexData)
+            listOfImages.add(ItemImage(absolutePathOfImage, "", false))
+        }
+        cursor.close()
+
+        return listOfImages
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+    }
 }
+

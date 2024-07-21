@@ -1,10 +1,16 @@
 package com.example.myapplication
 
+import android.app.Activity
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.databinding.ActivityMainBinding
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.database.Cursor
+import android.provider.MediaStore
+import android.util.Log
 import com.example.myapplication.Adapter.RvAdapter
 
 class MainActivity : AppCompatActivity() {
@@ -35,5 +41,6 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
 
     }
+
 }
 

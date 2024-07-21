@@ -6,17 +6,18 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.myapplication.LibraryInterface
 import com.example.myapplication.R
 import com.example.myapplication.DataItem.ItemAll
 
 class LibraryAdapter(private val items: List<ItemAll>, private val onClickFile: LibraryInterface) : RecyclerView.Adapter<LibraryAdapter.ViewHolder>() {
 
-    data class Item(val imageResId: Int, val text: String)
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageView: ImageView = view.findViewById(R.id.imageViewItem)
-        val textView: TextView = view.findViewById(R.id.textViewItem)
+        val txtNameAlbum: TextView = view.findViewById(R.id.txtNameImage)
+        val txtCount: TextView =view.findViewById(R.id.txtCountFile)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,10 +28,13 @@ class LibraryAdapter(private val items: List<ItemAll>, private val onClickFile: 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
-        holder.imageView.setImageResource(item.imageResId)
-        holder.textView.text = item.text
+        Glide.with(holder.imageView.context)
+            .load(item.imagePath)
+            .into(holder.imageView)
+        holder.txtNameAlbum.text = item.text
+        holder.txtCount.text=item.count.toString()
         holder.itemView.setOnClickListener {
-            onClickFile.onClickFile(position, holder.textView.text.toString())
+            onClickFile.onClickFile(position, holder.txtNameAlbum.text.toString())
         }
     }
 

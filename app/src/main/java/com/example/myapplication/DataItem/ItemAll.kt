@@ -1,6 +1,7 @@
 package com.example.myapplication.DataItem
 
 data class ItemAll(
-    val imageResId: Int,
-    val text: String
+    val imagePath: String,
+    val text: String,
+    val count: Int
 )

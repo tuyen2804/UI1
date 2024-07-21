@@ -4,7 +4,6 @@
     package="com.example.myapplication"
     tools:ignore="MissingLeanbackLauncher">
 
-
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
